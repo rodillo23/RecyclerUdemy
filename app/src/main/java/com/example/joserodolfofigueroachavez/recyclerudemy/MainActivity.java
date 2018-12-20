@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new MyAdapter(names, R.layout.reciclerview_item, new MyAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String name, int position) {
-                Toast.makeText(MainActivity.this, name + "–" + position, Toast.LENGTH_SHORT).show();
+                deleteElement(position);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -62,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
         names.add(position, "New element no. :" + (++counter));
         adapter.notifyItemInserted(position);
         llm.scrollToPosition(position);
+    }
+
+    private void deleteElement(int position){
+        names.remove(position);
+        counter = counter-1;
+        adapter.notifyItemRemoved(position);
     }
 
     @Override
