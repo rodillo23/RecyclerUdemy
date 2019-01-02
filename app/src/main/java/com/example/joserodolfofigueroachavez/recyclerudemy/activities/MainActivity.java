@@ -1,4 +1,4 @@
-package com.example.joserodolfofigueroachavez.recyclerudemy;
+package com.example.joserodolfofigueroachavez.recyclerudemy.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,8 +7,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Adapter;
-import android.widget.Toast;
+
+import com.example.joserodolfofigueroachavez.recyclerudemy.model.Movie;
+import com.example.joserodolfofigueroachavez.recyclerudemy.adapters.MyAdapter;
+import com.example.joserodolfofigueroachavez.recyclerudemy.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager llm;
-    private List<String> names;
+    private List<Movie> movies;
     private int counter = 0;
 
     @Override
@@ -26,17 +28,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        names = getText();
+        movies = getAllMovies();
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
 
-        adapter = new MyAdapter(names, R.layout.reciclerview_item, new MyAdapter.OnItemClickListener() {
+        adapter = new MyAdapter(movies, R.layout.reciclerview_item, new MyAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(String name, int position) {
-                deleteElement(position);
+            public void onItemClick(Movie movie, int position) {
+                removeMovie(position);
             }
         });
         recyclerView.setAdapter(adapter);
@@ -45,27 +47,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private List<String> getText(){
-        List<String> names = new ArrayList<>();
-        names.add("Chivas");
-        names.add("Pumas");
-        names.add("America");
-        names.add("Atlas");
-        names.add("Pachuca");
-        names.add("Toluca");
-        names.add("Tigres");
-        return names;
+    private List<Movie> getAllMovies(){
+        List<Movie> movie = new ArrayList<>();
+        movie.add(new Movie("BenHur", R.drawable.benhur));
+        movie.add(new Movie("Deadpool", R.drawable.deadpool));
+        movie.add(new Movie("Guardians of Galaxy", R.drawable.guardians));
+        movie.add(new Movie("Warcraft", R.drawable.warcraft));
+        return movie;
 
     }
 
-    private void addElement(int position) {
-        names.add(position, "New element no. :" + (++counter));
+    private void addMovie(int position) {
+        movies.add(position, new Movie("New element no. :" + (++counter), R.drawable.newmovie));
         adapter.notifyItemInserted(position);
         llm.scrollToPosition(position);
     }
 
-    private void deleteElement(int position){
-        names.remove(position);
+    private void removeMovie(int position){
+        movies.remove(position);
         counter = counter-1;
         adapter.notifyItemRemoved(position);
     }
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.add:
-                addElement(adapter.getItemCount());
+                addMovie(adapter.getItemCount());
                 return true;
 
             default:
